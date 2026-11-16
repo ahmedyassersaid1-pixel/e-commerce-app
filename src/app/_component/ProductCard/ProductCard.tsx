@@ -3,12 +3,14 @@ import { Eye, Heart, Plus, RotateCw, Star, StarHalf } from "lucide-react";
 import { ProductType } from "@/types/route.type";
 import Link from "next/link";
 import AddToCartBtn from "../AddToCartBtn/AddToCartBtn";
+import AddToWhislistBtn from "../AddToWhislistBtn/AddToWhislistBtn";
 import { FaStarHalfStroke } from "react-icons/fa6";
 
 export default function ProductCard({ product }: { product: ProductType }) {
   const rating = product.ratingsAverage ?? 0;
   const fullStars = Math.floor(rating);
   const hasHalfStar = rating % 1 >= 0.5;
+  // console.log("product",product)
   return (
     <div className="w-full lg:w-1/4 xl:w-1/5 p-3">
       <Link href={`/product-details/${product.id}`}>
@@ -36,13 +38,13 @@ export default function ProductCard({ product }: { product: ProductType }) {
               className="object-cover  p-3"
             />
             <div className="absolute top-2 right-2 flex flex-col gap-2">
-              <button
-                className="grid size-8 place-items-center rounded-full bg-white text-[#6b7280] shadow-[0_1px_6px_rgba(0,0,0,0.12)] transition-colors hover:text-red-500"
-                type="button"
-                aria-label="Add Woman Shawl to wishlist"
-              >
-                <Heart size={19} />
-              </button>
+              <AddToWhislistBtn
+                product={product}
+                style={
+                  "grid size-8 place-items-center rounded-full bg-white text-[#6b7280] shadow-[0_1px_6px_rgba(0,0,0,0.12)] transition-colors hover:text-red-500"
+                }
+                label={""}
+              />
               <button
                 className="grid size-8 place-items-center rounded-full bg-white text-[#6b7280] shadow-[0_1px_6px_rgba(0,0,0,0.12)] transition-colors hover:text-[#16a34a]"
                 type="button"
@@ -61,7 +63,7 @@ export default function ProductCard({ product }: { product: ProductType }) {
           </div>
 
           <div className="flex min-h-38.25 flex-col px-4 pt-1 pb-4">
-            <p className="mb-1 text-[14px] leading-5 text-[#6b7280]">
+            <p className="mb-1 text-[14px] leading-5 text-[#6b7280] line-clamp-2">
               {product.slug}
             </p>
             <h2 className="mb-1 truncate text-[20px] font-normal leading-6 text-[#364153]">
@@ -113,7 +115,13 @@ export default function ProductCard({ product }: { product: ProductType }) {
                   {product.price} EGP
                 </p>
               </div>
-              <AddToCartBtn id={product.id} label={"+"} css={"grid text-2xl font-semibold size-10 place-items-center rounded-full bg-[#16a34a] text-white transition-colors hover:bg-[#12843e]"} />
+              <AddToCartBtn
+                id={product.id}
+                label={"+"}
+                css={
+                  "grid text-2xl font-semibold size-10 place-items-center rounded-full bg-[#16a34a] text-white transition-colors hover:bg-[#12843e]"
+                }
+              />
             </div>
           </div>
         </article>

@@ -22,10 +22,11 @@ export default function CartContextProvider({ children }: { children: React.Reac
         const fetchProducts = async () => {
             try {
                 const res = await getProductsCart();
-                if (res.status === "success") {
+                if (res?.status === "success") {
                     setProductsArr(res.data.products);
                 }
             } catch (error) {
+                // Guests do not have a cart yet; keep the empty cart state.
                 console.error("Error fetching cart products:", error);
             }
         };

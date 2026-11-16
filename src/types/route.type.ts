@@ -17,7 +17,15 @@ export type ProductType = {
   createdAt: string;
   updatedAt: string;
   id: string;
+
 };
+// whislist
+export interface WishlistResponse {
+  status: string;
+  count: number;
+  data: ProductType[];
+}
+
 
 export type Subcategory = {
   _id: string;

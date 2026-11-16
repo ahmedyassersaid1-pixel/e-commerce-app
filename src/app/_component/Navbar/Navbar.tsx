@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import logo from "@/assetes/logo.png";
 import { useContext, useState } from "react";
-import { Heart, Menu, Search, X } from "lucide-react";
+import { ChevronRight, Heart, Menu, Search, X, UserRound, PackageCheck } from "lucide-react";
 import { FaRegUser } from "react-icons/fa6";
 import { FaCartShopping } from "react-icons/fa6";
 import { BiSupport } from "react-icons/bi";
@@ -13,14 +13,29 @@ import { IoGiftSharp } from "react-icons/io5";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaPhone } from "react-icons/fa6";
 import { FaUserPlus } from "react-icons/fa6";
+import { LuLogOut } from "react-icons/lu";
+import { FaRegUserCircle } from "react-icons/fa";
+import { FaRegAddressBook } from "react-icons/fa6";
+import { IoSettingsSharp } from "react-icons/io5";
 
 import { IoIosArrowDown } from "react-icons/io";
 // shadcn
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 import Sidebar from "../Sidebar/Sidebar";
 import { signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { CartContext } from "@/Context/CartContext";
+import { WishlistContext } from "../../../Context/WhislistContext";
 
 
 const links = [
@@ -44,6 +59,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const mySession = useSession();
   const {totalItemsCount} = useContext(CartContext);
+  const { wishlistCount } = useContext(WishlistContext);
 // console.log("contextttttttt",totalItemsCount)
   // console.log("sessionnnnnnnnn", mySession);
   function handleLogOut() {
@@ -127,12 +143,12 @@ export default function Navbar() {
             </Link>
 
             <form
-              className="hidden lg:flex h-9.5 min-w-0 flex-1 items-center overflow-hidden rounded-[7px] border border-[#e1e6e4] bg-white focus-within:border-[#0aad0a] focus-within:shadow-[0_0_0_3px_rgba(10,173,10,0.1)] sm:h-10.5"
+              className="hidden lg:flex h-9.5 min-w-0 flex-1 items-center overflow-hidden rounded-2xl border border-[#e1e6e4] bg-white focus-within:border-[#0aad0a] focus-within:shadow-[0_0_0_3px_rgba(10,173,10,0.1)] sm:h-10.5"
               action="/shop"
               role="search"
             >
               <input
-                className="h-full w-full min-w-0 bg-transparent px-2.5 text-[11px] text-[#21313c] outline-none placeholder:text-[#8a9499] sm:px-3.5 sm:text-[13px]"
+                className="h-full  w-full min-w-0 bg-transparent px-2.5 text-[11px] text-[#21313c] outline-none placeholder:text-[#8a9499] sm:px-3.5 sm:text-[13px]"
                 aria-label="Search products and brands"
                 name="q"
                 placeholder="Search for products, brands and more..."
@@ -195,28 +211,115 @@ export default function Navbar() {
                 </div>
               </Link>
               <Link
-                className=" items-center gap-1.5 whitespace-nowrap text-[13px] text-[#364153] no-underline transition-colors  md:flex hover:bg-[#f2f4f6] p-2 rounded-full hover:text-[#16a34a]"
+                className="relative items-center gap-1.5 whitespace-nowrap text-[13px] text-[#364153] no-underline transition-colors  md:flex hover:bg-[#f2f4f6] p-2 rounded-full hover:text-[#16a34a]"
                 href="/whislist"
                 aria-label="Wishlist"
               >
                 <Heart className="size-5 stroke-[1.8]" />
+                                {wishlistCount>0 &&               <span className="absolute top-0.5 right-0.5 size-4.5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center ring-2 ring-white">{wishlistCount}</span>}
+
               </Link>
               <Link
                 className="flex relative items-center gap-1.5 whitespace-nowrap  text-[13px] text-[#6a7282] no-underline transition-colors hover:bg-[#f2f4f6] p-2 rounded-full hover:text-[#16a34a]"
                 href="/cart"
                 aria-label="Shopping cart"
               >
-                {totalItemsCount>0 &&               <span className="absolute top-0.5 right-0.5 size-4.5 rounded-full bg-[#16a34a] text-white text-[10px] font-bold flex items-center justify-center ring-2 ring-white">{totalItemsCount}</span>
+                {totalItemsCount>0 &&   <span className="absolute top-0.5 right-0.5 size-4.5 rounded-full bg-[#16a34a] text-white text-[10px] font-bold flex items-center justify-center ring-2 ring-white">{totalItemsCount}</span>
 }
                 <FaCartShopping className="size-5 stroke-[1.8]  " />
               </Link>
               {mySession.status === "authenticated" ? (
-                <Button
-                  onClick={handleLogOut}
-                  className="hidden lg:flex capitalize  items-center gap-2 text-[14px] leading-5 font-semibold bg-red-600 hover:bg-red-400 hover:cursor-pointer transition-all duration-200"
-                >
-                  log out
-                </Button>
+                //////////////////
+                <>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger
+                      render={
+                        <Button
+                          variant="destructive"
+                          aria-label="Open account menu"
+                          className="size-10 rounded-full p-0 transition hover:bg-[#f0fdf4] focus-visible:ring-2 focus-visible:ring-[#16a34a]/30"
+                        >
+                          <span className="flex size-10 items-center justify-center rounded-full border border-[#dcfce7] bg-[#f0fdf4]">
+                            <FaRegUserCircle className="size-5 text-[#16a34a]" />
+                          </span>
+                        </Button>
+                      }
+                    />
+                    <DropdownMenuContent
+                      align="end"
+                      sideOffset={10}
+                      className="w-[280px] rounded-2xl border border-[#e8ece9] bg-white p-2 text-[#21313c] shadow-[0_14px_40px_rgba(33,49,60,0.16)]"
+                    >
+                      <DropdownMenuGroup>
+                        <DropdownMenuLabel className="p-0">
+                          <div className="flex items-center gap-3 rounded-xl bg-[#f6faf7] p-3">
+                            <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#e1f7e8] text-[#16a34a]">
+                              <FaRegUserCircle className="size-5" />
+                            </span>
+                            <span className="min-w-0 flex-1">
+                              <span className="block truncate text-sm font-semibold text-[#21313c]">{mySession.data?.user?.name || "My account"}</span>
+                              <span className="mt-0.5 block truncate text-xs font-normal text-[#7b8580]">{mySession.data?.user?.email || "Manage your FreshCart account"}</span>
+                            </span>
+                          </div>
+                        </DropdownMenuLabel>
+                      </DropdownMenuGroup>
+
+                      <DropdownMenuSeparator className="my-2 bg-[#edf0ee]" />
+
+                      <DropdownMenuGroup className="space-y-1">
+                        <DropdownMenuItem
+                          render={<Link href="/profile" />}
+                          className="h-10 cursor-pointer gap-3 rounded-xl px-3 text-sm font-medium text-[#364153] transition-colors hover:bg-[#f0fdf4] hover:text-[#13843d]! "
+                        >
+                          <UserRound className="size-4 " />
+                          <span className="flex-1">My Profile</span>
+                          <ChevronRight className="size-4 text-[#a0aaa4]" />
+                        </DropdownMenuItem>
+                             <DropdownMenuItem
+                          render={<Link href="/orders" />}
+                          className="h-10 cursor-pointer gap-3 rounded-xl px-3 text-sm font-medium text-[#364153] transition-colors hover:bg-[#f0fdf4] hover:text-[#13843d]! "
+                        >
+                          <PackageCheck className="size-4 " />
+                          <span className="flex-1">My Orders</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          render={<Link href="/whislist" />}
+                          className="h-10 cursor-pointer gap-3 rounded-xl px-3 text-sm font-medium text-[#364153] transition-colors hover:bg-[#f0fdf4] hover:text-[#13843d]! "
+                        >
+                          <Heart className="size-4 " />
+                          <span className="flex-1">My Wishlist</span>
+                          {wishlistCount > 0 && <span className="rounded-full bg-[#e7f8ec] px-2 py-0.5 text-[10px] font-semibold text-[#13843d]">{wishlistCount}</span>}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          render={<Link href="/profile/addresses" />}
+                          className="h-10 cursor-pointer gap-3 rounded-xl px-3 text-sm font-medium text-[#364153] transition-colors hover:bg-[#f0fdf4] hover:text-[#13843d]! "
+                        >
+                          <FaRegAddressBook className="size-4 " />
+                          <span className="flex-1">My Addresses</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          render={<Link href="/profile/settings" />}
+                          className="h-10 cursor-pointer gap-3 rounded-xl px-3 text-sm font-medium text-[#364153] transition-colors hover:bg-[#f0fdf4] hover:text-[#13843d]! "
+                        >
+                          <IoSettingsSharp className="size-4 " />
+                          <span className="flex-1">My Settings</span>
+                        </DropdownMenuItem>
+                   
+                      </DropdownMenuGroup>
+
+                      <DropdownMenuSeparator className="my-2 bg-[#edf0ee]" />
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem
+                          onClick={handleLogOut}
+                          className="h-10 cursor-pointer gap-3 rounded-xl px-3 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 hover:text-red-700 focus:bg-red-50 focus:text-red-700"
+                        >
+                          <LuLogOut className="size-4" />
+                          Log out
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+        </>
               ) : (
                 <Link
                   className="hidden lg:flex items-center gap-1.5 whitespace-nowrap text-[13px] text-white rounded-2xl no-underline transition-colors hover:bg-[#0e8138] bg-[#16a34a] px-4 py-2 font-bold"

@@ -27,6 +27,8 @@ export const authOptions: NextAuthOptions = {
         // on sucess return obj
         // on error return null | false | err
         try {
+          if (!credentials?.email || !credentials.password) return null;
+
           const res = await fetch(
             `https://ecommerce.routemisr.com/api/v1/auth/signin`,
             {
@@ -39,13 +41,10 @@ export const authOptions: NextAuthOptions = {
             },
           );
           const data = await res.json();
-          // console.log("loginnnn", data);
-          const { id } = jwtDecode<{ id: string }>(data.token);
-          // console.log("idddddddddd", id);
+          // A failed signin response has no JWT; check it before decoding.
+          if (!res.ok || !data?.token || !data?.user) return null;
 
-          if (!res.ok) {
-            throw new Error(data.message);
-          }
+          const { id } = jwtDecode<{ id: string }>(data.token);
           return {
             id: id,
             name: data.user.name,
@@ -54,9 +53,7 @@ export const authOptions: NextAuthOptions = {
           };
         } catch (error) {
           console.log("error reom api", error);
-          throw new Error((error as Error).message);
-
-          //   return null;
+          return null;
         }
       },
     }),

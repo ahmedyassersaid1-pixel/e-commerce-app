@@ -22,9 +22,7 @@ export async function addToCart(id: string) {
 }
 export async function getProductsCart() {
   const token = await getMyToken();
-  if(!token){
-    throw new Error("please login first")
-  }
+  if (!token) return null;
   try{
    const response = await fetch("https://ecommerce.routemisr.com/api/v1/cart", {
       headers: { token: String(token ?? "") },

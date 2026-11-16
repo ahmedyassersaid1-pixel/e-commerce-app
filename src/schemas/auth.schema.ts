@@ -56,3 +56,13 @@ export const loginSchema = zod.object({
 });
 
 export type loginSchemaType = zod.infer<typeof loginSchema>;
+export const ForgetPasswordSchema = zod.object({
+  email: zod
+    .email()
+    .nonempty("email is required")
+    .regex(
+      /^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/,
+      "Invalid email address. Please check the format (example: name@example.com)",
+    ),
+});
+export type ForgetPasswordSchemaType = zod.infer<typeof ForgetPasswordSchema>

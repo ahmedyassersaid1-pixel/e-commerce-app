@@ -15,6 +15,8 @@ import {
 import type { ProductType } from "@/types/route.type";
 import type { ReactNode } from "react";
 import AddToCartBtn from "@/app/_component/AddToCartBtn/AddToCartBtn";
+import AddToWhislistBtn from "../AddToWhislistBtn/AddToWhislistBtn";
+import ProductGallery from "./ProductGallery";
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat("en-EG", { maximumFractionDigits: 2 }).format(price);
@@ -36,7 +38,6 @@ export default function ProductDetails({
   const gallery = [product.imageCover, ...(product.images ?? [])]
     .filter((image, index, images) => Boolean(image) && images.indexOf(image) === index)
     .slice(0, 4);
-
   return (
     <main className="bg-[#f8faf9] px-4 py-5 text-[#21313c] sm:px-6 sm:py-8 lg:px-8 lg:py-10">
       <div className="mx-auto max-w-7xl">
@@ -56,45 +57,7 @@ export default function ProductDetails({
 
         <section className="grid gap-7 rounded-2xl border border-[#e8ece9] bg-white p-4 shadow-[0_8px_28px_rgba(33,49,60,0.04)] sm:p-6 lg:grid-cols-2 lg:gap-10 lg:p-8">
           <div className="min-w-0">
-            <div className="relative aspect-square overflow-hidden rounded-xl border border-[#edf0ee] bg-white p-3 sm:p-5">
-              {product.priceAfterDiscount && (
-                <span className="absolute top-4 left-4 z-10 rounded-md bg-[#ef4444] px-2.5 py-1 text-xs font-semibold text-white">
-                  -{Math.round(((product.price - product.priceAfterDiscount) / product.price) * 100)}%
-                </span>
-              )}
-              <Image
-                src={product.imageCover}
-                alt={product.title}
-                fill
-                priority
-                sizes="(min-width: 1024px) 46vw, 100vw"
-                className="object-contain p-4 sm:p-7"
-              />
-              <button
-                type="button"
-                aria-label="Add to wishlist"
-                className="absolute top-3 right-3 grid size-10 place-items-center rounded-full border border-[#edf0ee] bg-white text-[#6a7282] shadow-sm transition-colors hover:text-rose-500"
-              >
-                <Heart className="size-5" />
-              </button>
-            </div>
-
-            <div className="mt-3 grid grid-cols-4 gap-2.5 sm:mt-4 sm:gap-3">
-              {gallery.map((image, index) => (
-                <div
-                  className={`relative aspect-square overflow-hidden rounded-lg border bg-white p-1.5 sm:p-2 ${index === 0 ? "border-[#16a34a] ring-1 ring-[#16a34a]" : "border-[#e8ece9]"}`}
-                  key={`${image}-${index}`}
-                >
-                  <Image
-                    src={image}
-                    alt={`${product.title} image ${index + 1}`}
-                    fill
-                    sizes="(min-width: 1024px) 10vw, 22vw"
-                    className="object-contain p-1"
-                  />
-                </div>
-              ))}
-            </div>
+            <ProductGallery key={product.id} images={gallery} product={product} />
           </div>
 
           <div className="flex min-w-0 flex-col py-1 sm:py-2 lg:py-3">
@@ -175,9 +138,7 @@ export default function ProductDetails({
             </div>
 
             <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-b border-[#edf0ee] pb-5 text-xs text-[#6a7282]">
-              <button type="button" className="inline-flex items-center gap-1.5 transition-colors hover:text-[#16a34a]">
-                <Heart className="size-4" /> Add to Wishlist
-              </button>
+          <AddToWhislistBtn product={product} style={"inline-flex items-center gap-1.5 transition-colors hover:text-[#16a34a]"} label={"add to whislist"}/>
               <button type="button" className="inline-flex items-center gap-1.5 transition-colors hover:text-[#16a34a]">
                 <Share2 className="size-4" /> Share Product
               </button>
@@ -253,7 +214,7 @@ export default function ProductDetails({
                 <p className="text-xs font-semibold tracking-wide text-[#16a34a]">MORE TO EXPLORE</p>
                 <h2 id="related-products-title" className="mt-1 text-xl font-bold text-[#21313c] sm:text-2xl">You May Also Like</h2>
               </div>
-              <Link href="/shop" className="text-sm font-semibold text-[#16a34a] hover:text-[#12843d]">View all</Link>
+              <Link href="/" className="text-sm font-semibold text-[#16a34a] hover:text-[#12843d]">View all</Link>
             </div>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
               {relatedProducts.map((related) => (

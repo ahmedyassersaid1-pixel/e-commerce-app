@@ -4,6 +4,8 @@ import Slider from "./_component/Slider/Slider";
 import Herosection from "./_component/HeroSection/Herosection";
 import { getAllProducts,getAllCategories } from "@/sevices/routeapi.sevice";
 import CategoryCard from "./_component/CategoryCard/CategoryCard";
+import ScrollTriggered from './_component/ScrollTriggered/ScrollTriggered';
+import Newsletter from "./_component/Newsletter/Newsletter";
 import { CategoryType } from "@/types/route.type";
 
 
@@ -30,6 +32,8 @@ export default async function Home() {
           ))}
         </div>
       </section>
+      {/* animated cards */}
+      <ScrollTriggered />
       <section aria-labelledby="featured-products-heading mx-auto  lg:w-full lg:px-[16px]">
         <Header firstWord={"Featured"} secondWord={"Products"} />
 
@@ -40,6 +44,8 @@ export default async function Home() {
         </div>
       </section>
     </main>
+    <Newsletter />
+      <Herosection/>
   </>
   );
 }
