@@ -24,41 +24,52 @@ export default function CartPage() {
   const [currentId, setcurrentId] = useState("");
   const [totalItems, settotalItems] = useState(0);
   const { setProductsArr } = useContext(CartContext);
-  async function getCartDetails() {
-    const res = await getProductsCart();
-    if (res.status === "success") {
-      setcartData(res.data);
-      // console.log("dataaaaaaaaaaaaa",res);
-      const totalCount = res.data.products.reduce(
-        (sum: number, product: CartItem) => {
-          return sum + product.count;
-        },
-        0,
-      );
-
-      settotalItems(totalCount);
-    }
-  }
   useEffect(() => {
-    getCartDetails();
+    let active = true;
+    void getProductsCart()
+      .then((res) => {
+        if (!active) return;
+        if (res?.status === "success" && Array.isArray(res.data?.products)) {
+          setcartData(res.data);
+          settotalItems(
+            res.data.products.reduce(
+              (sum: number, product: CartItem) => sum + product.count,
+              0,
+            ),
+          );
+        } else {
+          setcartData(null);
+          settotalItems(0);
+        }
+      })
+      .catch((error) => {
+        console.error("Could not load cart:", error);
+        if (active) {
+          setcartData(null);
+          settotalItems(0);
+        }
+      });
+    return () => {
+      active = false;
+    };
   }, []);
   async function handleDeletItem(id: string) {
     setisDisable(true);
-
-    const res = await deleteOneItem(id);
-
-    if (res.status === "success") {
+    try {
+      const res = await deleteOneItem(id);
+      if (res?.status === "success") {
+        toast.add({ type: "success", description: "Product removed from your cart." });
+        setcartData(res.data);
+        setProductsArr(res.data.products);
+      } else {
+        toast.add({ type: "error", description: res?.message ?? "Could not remove this item." });
+      }
+    } catch (error) {
       toast.add({
-        type: "success",
-        description: "product deleted successfully",
+        type: "error",
+        description: error instanceof Error ? error.message : "Could not remove this item.",
       });
-      // console.log("ressssss", res.data);
-      setcartData(res.data);
-      // console.log("cartDataaaaaaa", cartData);
-      setisDisable(false);
-      setProductsArr(res.data.products);
-    } else {
-      toast.add({ type: "error", description: res.message });
+    } finally {
       setisDisable(false);
     }
   }
@@ -93,7 +104,7 @@ export default function CartPage() {
     try {
       const res = await clearCartData();
       // console.log("resssss", res);
-      if (res.message === "success") {
+      if (res?.message === "success") {
         toast.add({
           type: "success",
           description: "Cart Deleted Successfully",
@@ -101,7 +112,7 @@ export default function CartPage() {
         setcartData(null);
         setProductsArr([]);
       } else {
-        toast.add({ type: "error", description: res.message });
+        toast.add({ type: "error", description: res?.message ?? "Could not clear your cart." });
       }
     } catch (err) {
       toast.add({
@@ -336,7 +347,7 @@ export default function CartPage() {
             </h2>
 
             <p className="mt-2 text-sm text-gray-500 sm:text-base">
-              Looks like you haven't added anything to your cart yet.
+              Looks like you haven&apos;t added anything to your cart yet.
               <br />
               Start exploring our products!
             </p>

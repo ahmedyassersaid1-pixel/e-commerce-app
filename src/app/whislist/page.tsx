@@ -7,7 +7,7 @@ import {
 import  { useEffect, useState, useContext} from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Heart } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { ProductType ,CartItem} from "@/types/route.type";
 import { IoCart } from "react-icons/io5";
 import {
@@ -20,7 +20,6 @@ import { ImSpinner3 } from "react-icons/im";
 import { FaHeart } from "react-icons/fa";
 import { WishlistContext } from "@/Context/WhislistContext";
 import { CartContext } from "@/Context/CartContext";
-import { FaCartShopping } from "react-icons/fa6";
 
 import Herosection from "../_component/HeroSection/Herosection";
 import AddToCartBtn from "../_component/AddToCartBtn/AddToCartBtn";
@@ -39,7 +38,7 @@ function isProductInCart(product: ProductType, cartItems: CartItem[]) {
 
 export default function Page() {
   const [cartData, setCartData] = useState<null | ProductType[]>(null);
-  const { wishlistCount,setWishlistCount } = useContext(WishlistContext);
+  const { setWishlistCount } = useContext(WishlistContext);
 
   const {productsArr} = useContext(CartContext);
   async function handleGetWhislist() {
@@ -51,7 +50,18 @@ export default function Page() {
   }
 
   useEffect(() => {
-    handleGetWhislist();
+    let active = true;
+    void getWhislistData()
+      .then((res) => {
+        if (active) setCartData(res?.status === "success" ? res.data : []);
+      })
+      .catch((error) => {
+        console.error("Could not load wishlist:", error);
+        if (active) setCartData([]);
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
   async function handleDeletItem(id: string) {
@@ -103,7 +113,7 @@ export default function Page() {
                 <div className="flex flex-col gap-3">
                   <Link
                     className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl hover:bg-[#0e8138] bg-[#16a34a] text-white font-semibold transition-colors"
-                    href="/products"
+                    href="/shop"
                   >
                     Browse Products
                     <FaArrowRightLong />
@@ -159,7 +169,7 @@ export default function Page() {
                       <div className="md:col-span-6 flex items-center gap-4">
                         <Link
                           className="w-20 h-20 rounded-xl bg-gray-50 border border-gray-100 overflow-hidden shrink-0"
-                          href={`/products/${product.id}`}
+                          href={`/product-details/${product.id}`}
                         >
                           <Image
                             alt={product.category?.name || "Product"}
@@ -172,7 +182,7 @@ export default function Page() {
                         <div className="min-w-0">
                           <Link
                             className="font-medium text-gray-900 hover:text-primary-600 transition-colors line-clamp-2"
-                            href={`/products/${product.id}`}
+                            href={`/product-details/${product.id}`}
                           >
                             {product.title || product.slug}
                           </Link>

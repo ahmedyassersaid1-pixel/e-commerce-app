@@ -22,7 +22,7 @@ export default function CartContextProvider({ children }: { children: React.Reac
         const fetchProducts = async () => {
             try {
                 const res = await getProductsCart();
-                if (res?.status === "success") {
+                if (res?.status === "success" && Array.isArray(res.data?.products)) {
                     setProductsArr(res.data.products);
                 }
             } catch (error) {

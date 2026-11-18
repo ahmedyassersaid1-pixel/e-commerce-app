@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Eye, Heart, Plus, RotateCw, Star, StarHalf } from "lucide-react";
+import { Eye, Star } from "lucide-react";
 import { ProductType } from "@/types/route.type";
 import Link from "next/link";
 import AddToCartBtn from "../AddToCartBtn/AddToCartBtn";
@@ -13,7 +13,6 @@ export default function ProductCard({ product }: { product: ProductType }) {
   // console.log("product",product)
   return (
     <div className="w-full lg:w-1/4 xl:w-1/5 p-3">
-      <Link href={`/product-details/${product.id}`}>
         <article className="w-full overflow-hidden rounded-lg border border-[#e5e7eb] bg-white text-[#21313c] hover:-translate-y-2 hover:shadow-lg transition-all duration-200">
           <div className="relative h-60 w-full bg-white">
             {product.priceAfterDiscount && (
@@ -30,13 +29,15 @@ export default function ProductCard({ product }: { product: ProductType }) {
                 </span>
               </div>
             )}
-            <Image
-              src={product.imageCover}
-              alt={product.title}
-              fill
-              sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 25vw, 100vw"
-              className="object-cover  p-3"
-            />
+            <Link href={`/product-details/${product.id}`} aria-label={`View ${product.title}`} className="absolute inset-0">
+              <Image
+                src={product.imageCover}
+                alt={product.title}
+                fill
+                sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 25vw, 100vw"
+                className="object-cover p-3"
+              />
+            </Link>
             <div className="absolute top-2 right-2 flex flex-col gap-2">
               <AddToWhislistBtn
                 product={product}
@@ -45,20 +46,13 @@ export default function ProductCard({ product }: { product: ProductType }) {
                 }
                 label={""}
               />
-              <button
+              <Link
                 className="grid size-8 place-items-center rounded-full bg-white text-[#6b7280] shadow-[0_1px_6px_rgba(0,0,0,0.12)] transition-colors hover:text-[#16a34a]"
-                type="button"
-                aria-label="Compare Woman Shawl"
-              >
-                <RotateCw size={19} />
-              </button>
-              <button
-                className="grid size-8 place-items-center rounded-full bg-white text-[#6b7280] shadow-[0_1px_6px_rgba(0,0,0,0.12)] transition-colors hover:text-[#16a34a]"
-                type="button"
-                aria-label="Quick view Woman Shawl"
+                href={`/product-details/${product.id}`}
+                aria-label={`View ${product.title}`}
               >
                 <Eye size={19} />
-              </button>
+              </Link>
             </div>
           </div>
 
@@ -66,9 +60,9 @@ export default function ProductCard({ product }: { product: ProductType }) {
             <p className="mb-1 text-[14px] leading-5 text-[#6b7280] line-clamp-2">
               {product.slug}
             </p>
-            <h2 className="mb-1 truncate text-[20px] font-normal leading-6 text-[#364153]">
+            <Link href={`/product-details/${product.id}`} className="mb-1 block truncate text-[20px] font-normal leading-6 text-[#364153] hover:text-[#16a34a]">
               {product.title}
-            </h2>
+            </Link>
             <div
               className="flex items-center gap-2"
               aria-label="Rated 4.8 out of 5 from 18 reviews"
@@ -125,7 +119,6 @@ export default function ProductCard({ product }: { product: ProductType }) {
             </div>
           </div>
         </article>
-      </Link>
     </div>
   );
 }

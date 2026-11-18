@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import logo from "@/assetes/logo.png";
 import { useContext, useEffect, useState } from "react";
-import { ChevronRight, Heart, Menu, Search, X, UserRound, PackageCheck } from "lucide-react";
+import { ChevronRight, Heart, Menu, Search, X, UserRound } from "lucide-react";
 import { FaRegUser } from "react-icons/fa6";
 import { FaCartShopping } from "react-icons/fa6";
 import { BiSupport } from "react-icons/bi";
@@ -286,13 +286,6 @@ export default function Navbar() {
                           <UserRound className="size-4 " />
                           <span className="flex-1">My Profile</span>
                           <ChevronRight className="size-4 text-[#a0aaa4]" />
-                        </DropdownMenuItem>
-                             <DropdownMenuItem
-                          render={<Link href="/orders" />}
-                          className="h-10 cursor-pointer gap-3 rounded-xl px-3 text-sm font-medium text-[#364153] transition-colors hover:bg-[#f0fdf4] hover:text-[#13843d]! "
-                        >
-                          <PackageCheck className="size-4 " />
-                          <span className="flex-1">My Orders</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           render={<Link href="/whislist" />}

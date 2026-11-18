@@ -18,9 +18,7 @@ return data
 }
 export async function addToWhislist(id:string){
     const token =await getMyToken()
-    if(!token){
-        throw new Error("please login first")
-    }
+    if (!token) return { status: "fail", message: "Please sign in to save items to your wishlist." };
     try{
 const res = await fetch(`https://ecommerce.routemisr.com/api/v1/wishlist`,{
     method:"POST",
@@ -34,15 +32,13 @@ token: token as string  ,
 const data = await res.json()
 return data
     }catch(err){
-        console.log("error",err)
-        return err
+        console.error("Could not add wishlist item:", err)
+        return { status: "fail", message: "Could not save this item. Please try again." }
     }
 }
 export async function deleteWhislistItem(deletedId:string){
     const token =await getMyToken()
-    if(!token){
-        throw new Error("please login first")
-    }
+    if (!token) return { status: "fail", message: "Please sign in first." };
     try{
 const res = await fetch(`https://ecommerce.routemisr.com/api/v1/wishlist/${deletedId}`,{
     method:"DELETE",
@@ -54,7 +50,7 @@ token: token as string  ,
 const data = await res.json()
 return data
     }catch(err){
-        console.log("error",err)
-        return err
+        console.error("Could not remove wishlist item:", err)
+        return { status: "fail", message: "Could not remove this item. Please try again." }
     }
 }

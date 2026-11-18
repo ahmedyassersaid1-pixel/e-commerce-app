@@ -45,7 +45,7 @@ export default function AnimatedCards() {
 
           <Link
             className="inline-flex items-center gap-2 bg-white text-emerald-600 px-6 py-3 rounded-full font-bold hover:bg-gray-100 transition-colors"
-            href="/products"
+            href="/shop"
           >
             Shop Now <HiArrowNarrowRight />
           </Link>
@@ -91,7 +91,7 @@ export default function AnimatedCards() {
 
           <Link
             className="inline-flex font-bold items-center gap-2 bg-white text-orange-500 px-6 py-3 rounded-full  hover:bg-gray-100 transition-colors"
-            href="/products"
+            href="/shop"
           >
             Explore Now <HiArrowNarrowRight />
           </Link>

@@ -109,7 +109,7 @@ function handleLogOut() {
           <div className="grid gap-1 border-b border-[#edf0ee] py-5">
             <Link
               className="flex py-3 items-center gap-4 rounded-2xl bg-[#f8fbfa] px-4  text-[#21313c] no-underline transition-colors hover:bg-[#f1faf4]"
-              href="/wishlist"
+              href="/whislist"
               onClick={onClose}
             >
               <span className="grid size-9 place-items-center rounded-full bg-[#fff1f2] text-[#ff3548]">

@@ -4,21 +4,22 @@ import { getMyToken } from "@/utils";
 
 export async function addToCart(id: string) {
   const token = await getMyToken();
-  if(!token){
-    throw new Error("please login first")
+  if (!token) return { status: "fail", message: "Please sign in to add items to your cart." };
+
+  try {
+    const res = await fetch("https://ecommerce.routemisr.com/api/v1/cart", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        token,
+      },
+      body: JSON.stringify({ productId: id }),
+    });
+    return await res.json();
+  } catch (error) {
+    console.error("Could not add product to cart:", error);
+    return { status: "fail", message: "Could not reach the store. Please try again." };
   }
-  const res = await fetch(`https://ecommerce.routemisr.com/api/v1/cart`, {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      token: token as string,
-    },
-    body: JSON.stringify({
-      productId: id,
-    }),
-  });
-  const data = await res.json();
-  return data
 }
 export async function getProductsCart() {
   const token = await getMyToken();
@@ -32,15 +33,13 @@ export async function getProductsCart() {
     if (!response.ok) return null;
     return await response.json();
   } catch (err){
-    return err;
+    console.error("Could not fetch cart:", err);
+    return null;
   }
 }
 export async function deleteOneItem(itemId:string){
- console.log("finishhhhhhhhhgggggggggggggggg")
    const token = await getMyToken();
-  if(!token){
-    throw new Error("please login first")
-  }
+  if (!token) return { status: "fail", message: "Please sign in first." };
  try{
 const res = await fetch(`https://ecommerce.routemisr.com/api/v1/cart/${itemId}`,{
       method: "DELETE",
@@ -55,15 +54,14 @@ const res = await fetch(`https://ecommerce.routemisr.com/api/v1/cart/${itemId}`,
 const data = await res.json();
 return data
  }catch(err){
-return err
+console.error("Could not remove cart item:", err);
+return { status: "fail", message: "Could not remove this item. Please try again." };
  }
 }
 export async function updateCartItem(itemId:string,newCount:number){
 //  console.log("finishhhhhhhhhgggggggggggggggg")
    const token = await getMyToken();
-  if(!token){
-    throw new Error("please login first")
-  }
+  if (!token) return { status: "fail", message: "Please sign in first." };
  try{
 const res = await fetch(`https://ecommerce.routemisr.com/api/v1/cart/${itemId}`,{
       method: "PUT",
@@ -80,15 +78,14 @@ const res = await fetch(`https://ecommerce.routemisr.com/api/v1/cart/${itemId}`,
 const data = await res.json();
 return data
  }catch(err){
-return err
+console.error("Could not update cart item:", err);
+return { status: "fail", message: "Could not update this item. Please try again." };
  }
 }
 export async function clearCartData(){
 //  console.log("finishhhhhhhhhgggggggggggggggg")
    const token = await getMyToken();
-  if(!token){
-    throw new Error("please login first")
-  }
+  if (!token) return { status: "fail", message: "Please sign in first." };
  try{
 const res = await fetch(`https://ecommerce.routemisr.com/api/v1/cart`,{
       method: "DELETE",
@@ -98,12 +95,12 @@ const res = await fetch(`https://ecommerce.routemisr.com/api/v1/cart`,{
 
   }
 })
-console.log("resssssssss",res)
  if (!res.ok) return null;
 const data = await res.json();
 return data
  }catch(err){
-return err
+console.error("Could not clear cart:", err);
+return { status: "fail", message: "Could not clear your cart. Please try again." };
  }
 }
 

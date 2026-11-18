@@ -9,8 +9,8 @@ const linkGroups = [
   {
     title: "Shop",
     links: [
-      { label: "All Products", href: "/" },
-      { label: "Categories", href: "/" },
+      { label: "All Products", href: "/shop" },
+      { label: "Categories", href: "/categories" },
       { label: "Brands", href: "/brands" },
       { label: "Electronics", href: "/" },
       { label: "Men’s Fashion", href: "/" },

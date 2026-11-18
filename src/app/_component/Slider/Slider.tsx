@@ -39,13 +39,13 @@ export default function Slider() {
             <div className="mt-4" style={{ opacity: 1, transform: "none" }}>
               <Link
                 className="btn bg-white border-2 border-white/50 text-green-500 inline-block px-6 py-2 rounded-lg font-semibold hover:scale-105 transition-transform"
-                href="/products"
+                href="/shop"
               >
                 Shop Now
               </Link>
               <Link
                 className="btn bg-transparent border-2 border-white/50 text-white ml-2 inline-block px-6 py-2 rounded-lg font-semibold hover:scale-105 transition-transform"
-                href="/deals"
+                href="/shop"
               >
                 View Deals
               </Link>
@@ -73,13 +73,13 @@ export default function Slider() {
             <div className="mt-4" style={{ opacity: 1, transform: "none" }}>
               <Link
                 className="btn bg-white border-2 border-white/50 text-green-500 inline-block px-6 py-2 rounded-lg font-semibold hover:scale-105 transition-transform"
-                href="/products"
+                href="/shop"
               >
                 Shop Now
               </Link>
               <Link
                 className="btn bg-transparent border-2 border-white/50 text-white ml-2 inline-block px-6 py-2 rounded-lg font-semibold hover:scale-105 transition-transform"
-                href="/about"
+                href="/contact"
               >
                 Learn More
               </Link>
@@ -107,13 +107,13 @@ export default function Slider() {
             <div className="mt-4" style={{ opacity: 1, transform: "none" }}>
               <Link
                 className="btn bg-white border-2 border-white/50 text-green-500 inline-block px-6 py-2 rounded-lg font-semibold hover:scale-105 transition-transform"
-                href="/products"
+                href="/shop"
               >
                 Order Now
               </Link>
               <Link
                 className="btn bg-transparent border-2 border-white/50 text-white ml-2 inline-block px-6 py-2 rounded-lg font-semibold hover:scale-105 transition-transform"
-                href="/deals"
+                href="/contact"
               >
                 Delivert Info
               </Link>
