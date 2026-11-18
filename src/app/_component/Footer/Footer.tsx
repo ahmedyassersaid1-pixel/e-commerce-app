@@ -58,7 +58,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 gap-x-6 gap-y-9 sm:grid-cols-3 sm:gap-x-8 lg:grid-cols-[2.05fr_repeat(4,minmax(0,1fr))] lg:gap-x-10">
           <div className="col-span-2 sm:col-span-3 lg:col-span-1">
             <Link href="/" aria-label="FreshCart home" className="inline-flex items-center gap-1.5 rounded-md bg-white px-2.5 py-1 text-[18px] font-bold leading-6 tracking-tight text-[#263746]">
-              <Image src={logo} alt="" width={22} height={20} className="h-5 w-5 object-contain" />
+              <Image src={logo} alt="" width={22} height={20} className="h-5 w-auto object-contain" />
               <span>FreshCart</span>
             </Link>
             <p className="mt-5 max-w-75 text-[14px] leading-[1.6] text-[#99A1AF]">

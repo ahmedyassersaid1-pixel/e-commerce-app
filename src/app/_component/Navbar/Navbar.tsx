@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import logo from "@/assetes/logo.png";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ChevronRight, Heart, Menu, Search, X, UserRound, PackageCheck } from "lucide-react";
 import { FaRegUser } from "react-icons/fa6";
 import { FaCartShopping } from "react-icons/fa6";
@@ -36,30 +36,32 @@ import { signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { CartContext } from "@/Context/CartContext";
 import { WishlistContext } from "../../../Context/WhislistContext";
+import { loadCategoriesForMenu } from "@/action/category.action";
+import type { CategoryType } from "@/types/route.type";
 
 
 const links = [
   { label: "Home", href: "/" },
   { label: "Shop", href: "/shop" },
-  {
-    label: "Categories",
-    href: "/categories",
-    subLinks: [
-      { label: "All Categories", href: "/categories" },
-      { label: "Electronics", href: "/categories/electronics" },
-      { label: "Women's Fashion", href: "/categories/women-fashion" },
-      { label: "Men's Fashion", href: "/categories/men-fashion" },
-      { label: "Beauty & Health", href: "/categories/beauty-health" },
-    ],
-  },
+  { label: "Categories", href: "/categories" },
   { label: "Brands", href: "/brands" },
 ];
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [categories, setCategories] = useState<CategoryType[]>([]);
   const mySession = useSession();
   const {totalItemsCount} = useContext(CartContext);
   const { wishlistCount } = useContext(WishlistContext);
+  useEffect(() => {
+    let isMounted = true;
+    void loadCategoriesForMenu().then((result) => {
+      if (isMounted) setCategories(result || []);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 // console.log("contextttttttt",totalItemsCount)
   // console.log("sessionnnnnnnnn", mySession);
   function handleLogOut() {
@@ -143,49 +145,59 @@ export default function Navbar() {
             </Link>
 
             <form
-              className="hidden lg:flex h-9.5 min-w-0 flex-1 items-center overflow-hidden rounded-2xl border border-[#e1e6e4] bg-white focus-within:border-[#0aad0a] focus-within:shadow-[0_0_0_3px_rgba(10,173,10,0.1)] sm:h-10.5"
+              className="hidden h-10.5 min-w-0 flex-1 items-center overflow-hidden rounded-2xl border border-[#e1e6e4] bg-[#fbfcfd] transition focus-within:border-[#0aad0a] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(10,173,10,0.1)] lg:flex"
               action="/shop"
               role="search"
             >
               <input
-                className="h-full  w-full min-w-0 bg-transparent px-2.5 text-[11px] text-[#21313c] outline-none placeholder:text-[#8a9499] sm:px-3.5 sm:text-[13px]"
+                className="h-full w-full min-w-0 bg-transparent px-4 text-sm text-[#21313c] outline-none placeholder:text-[#8a9499]"
                 aria-label="Search products and brands"
                 name="q"
                 placeholder="Search for products, brands and more..."
+                type="search"
+                required
               />
               <button
-                className="mr-1 grid size-7.5 shrink-0 place-items-center rounded-full border-0 bg-[#0aad0a] text-white transition-colors hover:bg-[#088f08] sm:size-8"
+                className="mr-1 grid size-9 shrink-0 place-items-center rounded-full border-0 bg-[#16a34a] text-white transition-colors hover:bg-[#12843e]"
                 type="submit"
                 aria-label="Search"
               >
                 <Search size={19} strokeWidth={2.2} />
               </button>
             </form>
-            <div className="hidden lg:flex gap-6 ">
+            <div className="hidden lg:flex gap-6 items-center">
               {links.map((link) => (
                 <div key={link.label}>
-                  {link.subLinks ? (
-                    <div className="relative group">
-                      <button className="flex items-center gap-2">
+                  {link.label === "Categories" ? (
+                    <div className="group relative">
+                      <Link
+                        className="flex items-center gap-1.5 py-2 font-medium text-[#364153] no-underline hover:text-[#0aad0a]"
+                        href={link.href}
+                      >
                         Categories
-                        <IoIosArrowDown className="group-hover:rotate-180 transition-all duration-200" />
-                      </button>
-
-                      <div className="absolute left-0 top-full hidden w-64 py-3 rounded-2xl bg-white  shadow-xl group-hover:block">
-                        {link.subLinks.map((category) => (
+                        <IoIosArrowDown className="transition-transform duration-200 group-hover:rotate-180" />
+                      </Link>
+                      <div className="absolute left-0 top-full z-50 hidden w-64 rounded-2xl bg-white py-3 shadow-xl group-hover:block group-focus-within:block">
+                        <Link
+                          className="block rounded-lg px-4 py-2.5 text-sm text-[#364153] no-underline hover:bg-[#f0fdf4] hover:text-[#16a34a]"
+                          href="/categories"
+                        >
+                          All Categories
+                        </Link>
+                        {categories.map((category) => (
                           <Link
-                            key={category.label}
-                            href={category.href}
-                            className="block rounded-lg px-2 py-3 hover:bg-gray-100"
+                            key={category._id}
+                            className="block rounded-lg px-4 py-2.5 text-sm text-[#364153] no-underline hover:bg-[#f0fdf4] hover:text-[#16a34a]"
+                            href={`/categories/${category._id}`}
                           >
-                            {category.label}
+                            {category.name}
                           </Link>
                         ))}
                       </div>
                     </div>
                   ) : (
                     <Link
-                      className="border-b  border-[#f0f2f1] py-2.5  font-medium text-[#364153] no-underline hover:text-[#0aad0a]"
+                      className=" py-2  font-medium text-[#364153] no-underline hover:text-[#0aad0a]"
                       key={link.href}
                       href={link.href}
                       onClick={() => setMenuOpen(false)}
@@ -347,6 +359,22 @@ export default function Navbar() {
             </div>
           </div>
         </div>
+
+        <form className="px-4 pb-3 lg:hidden" action="/shop" role="search">
+          <div className="flex h-11 items-center overflow-hidden rounded-2xl border border-[#e1e6e4] bg-[#fbfcfd] transition focus-within:border-[#0aad0a] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(10,173,10,0.1)]">
+            <input
+              className="h-full min-w-0 flex-1 bg-transparent px-4 text-sm text-[#21313c] outline-none placeholder:text-[#8a9499]"
+              aria-label="Search products and brands"
+              name="q"
+              placeholder="Search products, brands and more..."
+              type="search"
+              required
+            />
+            <button className="mr-1 grid size-9 shrink-0 place-items-center rounded-full bg-[#16a34a] text-white transition-colors hover:bg-[#12843e]" type="submit" aria-label="Search">
+              <Search size={19} strokeWidth={2.2} />
+            </button>
+          </div>
+        </form>
 
         <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} />
       </header>

@@ -1,48 +1,58 @@
-import React from "react";
 import Link from "next/link";
+import type { ReactNode } from "react";
 
-export default function page() {
+export type HeaderBreadcrumb = {
+  label: string;
+  href?: string;
+};
+
+type HeaderSecProps = {
+  title: string;
+  description?: string;
+  breadcrumbs?: HeaderBreadcrumb[];
+  icon?: ReactNode;
+  variant?: "default" | "account" | "brands";
+};
+
+export default function HeaderSec({
+  title,
+  description,
+  breadcrumbs = [{ label: "Home", href: "/" }],
+  icon,
+  variant = "default",
+}: HeaderSecProps) {
+  const isHighlighted = variant === "account" || variant === "brands";
   return (
-    <>
-      <div className="bg-gradient-to-br from-primary-600 via-primary-500 to-primary-400 text-white">
-        <div className="container mx-auto px-4 py-10 sm:py-12">
-          <nav className="flex items-center gap-2 text-sm text-white/70 mb-6">
-            <Link
-              className="hover:text-white transition-colors duration-200"
-              href="/"
-            >
-              Home
-            </Link>
-            <span className="text-white/40">/</span>
-            <span className="text-white font-medium">My Account</span>
-          </nav>
-          <div className="flex items-center gap-5">
-            <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-xl ring-1 ring-white/30">
-              <svg
-                data-prefix="fas"
-                data-icon="user"
-                className="svg-inline--fa fa-user text-3xl"
-                role="img"
-                viewBox="0 0 448 512"
-                aria-hidden="true"
-              >
-                <path
-                  fill="currentColor"
-                  d="M224 248a120 120 0 1 0 0-240 120 120 0 1 0 0 240zm-29.7 56C95.8 304 16 383.8 16 482.3 16 498.7 29.3 512 45.7 512l356.6 0c16.4 0 29.7-13.3 29.7-29.7 0-98.5-79.8-178.3-178.3-178.3l-59.4 0z"
-                />
-              </svg>
+    <section className={variant === "account" ? "bg-linear-to-r from-[#16b451] to-[#2bd66a] text-white" : variant === "brands" ? "bg-linear-to-r from-[#8429f6] to-[#ae39fa] text-white" : "border-b border-[#e8eee9]"}>
+      <div className={`mx-auto px-4 lg:px-8 ${variant === "account" ? "py-14 sm:px-6 sm:py-16" : "py-8 sm:px-6 sm:py-10"}`}>
+        <nav aria-label="Breadcrumb" className={`mb-5 flex items-center gap-2 text-sm ${isHighlighted ? "text-white/75" : "text-[#77837c]"}`}>
+          {breadcrumbs.map((item, index) => (
+            <span className="flex items-center gap-2" key={`${item.label}-${index}`}>
+              {index > 0 && <span aria-hidden="true" className={isHighlighted ? "text-white/55" : "text-[#b6c0b9]"}>/</span>}
+              {item.href && index < breadcrumbs.length - 1 ? (
+                <Link className={`transition-colors ${isHighlighted ? "hover:text-white" : "hover:text-[#009966]"}`} href={item.href}>
+                  {item.label}
+                </Link>
+              ) : (
+                <span aria-current={index === breadcrumbs.length - 1 ? "page" : undefined} className={index === breadcrumbs.length - 1 ? (isHighlighted ? "font-semibold text-white" : "font-medium text-[#21313c]") : ""}>
+                  {item.label}
+                </span>
+              )}
+            </span>
+          ))}
+        </nav>
+        <div className="flex items-center gap-4">
+          {icon && (
+            <div className={`grid shrink-0 place-items-center rounded-2xl shadow-sm ${isHighlighted ? "size-16 bg-white/20 text-white ring-1 ring-white/30 sm:size-20" : "size-12 bg-white text-[#009966] ring-1 ring-[#e8eee9] sm:size-14"}`}>
+              {icon}
             </div>
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-                My Account
-              </h1>
-              <p className="text-white/80 mt-1">
-                Manage your addresses and account settings
-              </p>
-            </div>
+          )}
+          <div>
+            <h1 className={`font-bold tracking-tight ${isHighlighted ? "text-3xl text-white sm:text-4xl" : "text-2xl text-[#21313c] sm:text-3xl"}`}>{title}</h1>
+            {description && <p className={`mt-1 ${isHighlighted ? "text-base text-white/85 sm:text-lg" : "text-sm text-[#68766e] sm:text-base"}`}>{description}</p>}
           </div>
         </div>
       </div>
-    </>
+    </section>
   );
 }

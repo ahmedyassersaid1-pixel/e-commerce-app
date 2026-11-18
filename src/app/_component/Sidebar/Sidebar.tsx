@@ -21,7 +21,7 @@ type SidebarProps = {
 const shopLinks = [
   { label: "Home", href: "/" },
   { label: "Shop", href: "/shop" },
-  { label: "Categories", href: "/categoires" },
+  { label: "Categories", href: "/categories" },
   { label: "Brands", href: "/brands" },
 ];
 
@@ -95,7 +95,7 @@ function handleLogOut() {
               {shopLinks.map((item) => (
                 <li key={item.label}>
                   <Link
-                    className="flex py-3 items-center px-4  text-[#21313c] rounded-lg no-underline transition-colors hover:text-[#16a34a] hover:bg-[#f0fdf4]"
+                    className="flex items-center rounded-lg px-4 py-3 text-[#21313c] no-underline transition-colors hover:bg-[#f0fdf4] hover:text-[#16a34a]"
                     href={item.href}
                     onClick={onClose}
                   >
