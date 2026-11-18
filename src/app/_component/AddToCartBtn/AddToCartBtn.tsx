@@ -22,7 +22,9 @@ export default function AddToCartBtn({
     setIsAdding(true);
     try {
       const res = await addToCart(id);
+        // console.log("addddd",res)
       if (res?.status === "success") {
+        // console.log("addddd")
         const updatedCart = await getProductsCart();
         if (Array.isArray(updatedCart?.data?.products)) {
           setProductsArr(updatedCart.data.products);

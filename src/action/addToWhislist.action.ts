@@ -7,7 +7,8 @@ export async function getWhislistData(){
     try{
 const res = await fetch(`https://ecommerce.routemisr.com/api/v1/wishlist`,{
     headers:{
-token: token as string    }
+token: token as string    },
+    cache: "no-store",
 });
 const data = await res.json()
 return data

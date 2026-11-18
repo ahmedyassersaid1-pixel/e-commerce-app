@@ -5,7 +5,7 @@ import { HiArrowNarrowRight } from "react-icons/hi";
 
 export default function AnimatedCards() {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 px-10 py-10">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 px-10 py-10 overflow-hidden">
 
       {/* First Card - From Left */}
       <motion.div

@@ -4,6 +4,7 @@ import { getMyToken } from "@/utils";
 
 export async function addToCart(id: string) {
   const token = await getMyToken();
+  // console.log("tokeeeen",token)
   if (!token) return { status: "fail", message: "Please sign in to add items to your cart." };
 
   try {

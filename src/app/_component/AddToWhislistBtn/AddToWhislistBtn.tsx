@@ -10,7 +10,7 @@ import { WishlistContext } from "../../../Context/WhislistContext";
 
 export default function AddToWhislistBtn({product ,style,label}:{product: ProductType,style:string,label:string}) {
 
-  const { setWishlistCount,wishlistArr,setWishlistArr } = useContext(WishlistContext);
+  const { wishlistCount, setWishlistCount,wishlistArr,setWishlistArr } = useContext(WishlistContext);
   const [isSaving, setIsSaving] = useState(false);
   const isWisList=wishlistArr.some((productId)=>productId===product._id || productId===product.id)
 
@@ -21,11 +21,20 @@ async function handleAddToWhislist(){
   try {
     const res = await addToWhislist(product.id);
     if (res?.status === "success") {
-      const ids = Array.isArray(res.data)
-        ? res.data.map((item: { _id?: string; id?: string }) => String(item._id ?? item.id ?? "")).filter(Boolean)
-        : [];
-      setWishlistCount(res.count ?? ids.length);
-      setWishlistArr(ids);
+      const responseProducts = Array.isArray(res.data)
+        ? res.data
+        : Array.isArray(res.data?.products)
+          ? res.data.products
+          : [];
+      const responseIds = responseProducts
+        .map((item: string | { _id?: string; id?: string; product?: { _id?: string; id?: string } }) =>
+          typeof item === "string" ? item : String(item.product?._id ?? item.product?.id ?? item._id ?? item.id ?? ""),
+        )
+        .filter(Boolean);
+      const productId = String(product._id ?? product.id);
+
+      setWishlistArr((currentIds) => Array.from(new Set([...currentIds, ...responseIds, productId])));
+      setWishlistCount(res.count ?? wishlistCount + (isWisList ? 0 : 1));
       toast.add({ type: "success", description: res.message });
     } else {
       toast.add({ type: "error", description: res?.message ?? "Could not save this item." });

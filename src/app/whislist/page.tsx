@@ -38,7 +38,7 @@ function isProductInCart(product: ProductType, cartItems: CartItem[]) {
 
 export default function Page() {
   const [cartData, setCartData] = useState<null | ProductType[]>(null);
-  const { setWishlistCount } = useContext(WishlistContext);
+  const { wishlistArr, setWishlistCount } = useContext(WishlistContext);
 
   const {productsArr} = useContext(CartContext);
   async function handleGetWhislist() {
@@ -62,7 +62,7 @@ export default function Page() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [wishlistArr]);
 
   async function handleDeletItem(id: string) {
     const res = await deleteWhislistItem(id);
