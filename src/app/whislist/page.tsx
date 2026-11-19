@@ -38,17 +38,9 @@ function isProductInCart(product: ProductType, cartItems: CartItem[]) {
 
 export default function Page() {
   const [cartData, setCartData] = useState<null | ProductType[]>(null);
-  const { wishlistArr, setWishlistCount } = useContext(WishlistContext);
+  const { wishlistArr, setWishlistArr, setWishlistCount } = useContext(WishlistContext);
 
   const {productsArr} = useContext(CartContext);
-  async function handleGetWhislist() {
-    const res = await getWhislistData();
-    if (res.status === "success") {
-      console.log("dataaaaaa",res)
-      setCartData(res.data);
-    }
-  }
-
   useEffect(() => {
     let active = true;
     void getWhislistData()
@@ -67,9 +59,18 @@ export default function Page() {
   async function handleDeletItem(id: string) {
     const res = await deleteWhislistItem(id);
     if (res.status === "success") {
-      handleGetWhislist();
-      // console.log("deleeete",res)
-      setWishlistCount(res.data.length)
+      const removedId = String(id);
+      const removedProduct = cartData?.find(
+        (product) => String(product._id) === removedId || String(product.id) === removedId,
+      );
+      const contextId = String(removedProduct?._id ?? removedProduct?.id ?? removedId);
+      setCartData((current) =>
+        current?.filter((product) => String(product._id) !== removedId && String(product.id) !== removedId) ?? [],
+      );
+      setWishlistArr((current) => current.filter((productId) => productId !== removedId && productId !== contextId));
+      const responseCount = Array.isArray(res.data) ? res.data.length : res.count;
+      if (typeof responseCount === "number") setWishlistCount(responseCount);
+      else setWishlistCount((current) => Math.max(0, current - 1));
       toast.add({
         type: "success",
         description: res.message,
