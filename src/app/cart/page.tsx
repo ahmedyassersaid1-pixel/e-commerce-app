@@ -23,7 +23,7 @@ export default function CartPage() {
   const [isUpdated, setisUpdated] = useState(false);
   const [currentId, setcurrentId] = useState("");
   const [totalItems, settotalItems] = useState(0);
-  const { setProductsArr } = useContext(CartContext);
+  const { setProductsArr,totalItemsCount } = useContext(CartContext);
   useEffect(() => {
     let active = true;
     void getProductsCart()
@@ -271,7 +271,7 @@ export default function CartPage() {
                   <ShoppingCart size={18} /> Order Summary
                 </h2>
                 <p className="mt-1 text-xs text-green-50">
-                  {totalItems} item in your cart
+                  {totalItemsCount} item in your cart
                 </p>
               </div>
 
@@ -316,12 +316,12 @@ export default function CartPage() {
                 >
                   Apply Promo Code
                 </button>
-                <button
-                  type="button"
+                <Link
+                  href="/checkout"
                   className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#16a34a] text-sm font-semibold text-white transition hover:bg-green-700"
                 >
                   Secure Checkout <span aria-hidden="true">→</span>
-                </button>
+                </Link>
                 <div className="flex items-center justify-center gap-2 text-center text-[11px] text-gray-500">
                   <span className="text-green-600">✓ Secure Payment</span>
                   <span>•</span>

@@ -13,7 +13,7 @@ type WishlistContextType = {
 type WishlistResponse = {
   status?: string;
   count?: number;
-  data?: any[]; // البيانات القادمة عبارة عن مصفوفة أوبجيكتس
+  data?: any[]; 
 };
 
 export const WishlistContext = createContext<WishlistContextType>({

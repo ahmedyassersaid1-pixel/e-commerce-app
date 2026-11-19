@@ -93,3 +93,37 @@ export interface CartResponseType {
   cartId: string;
   data: CartData;
 }
+
+export type OrderProduct = {
+  _id: string;
+  count: number;
+  price: number;
+  product: ProductType;
+};
+
+export type OrderType = {
+  _id: string;
+  id: number;
+  cartItems: OrderProduct[];
+  createdAt: string;
+  updatedAt: string;
+  isDelivered: boolean;
+  isPaid: boolean;
+  paidAt?: string;
+  deliveredAt?: string;
+  paymentMethodType: string;
+  shippingPrice: number;
+  taxPrice: number;
+  totalOrderPrice: number;
+  shippingAddress: {
+    details: string;
+    phone: string;
+    city: string;
+  };
+  user: {
+    _id: string;
+    name: string;
+    email: string;
+    phone?: string;
+  };
+};
